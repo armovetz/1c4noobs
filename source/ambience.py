@@ -1,18 +1,26 @@
-# <AMB_PAYERS> is list of non-empty unique strings, one string per payer
+п»ї# <AMB_PAYERS> is list of non-empty unique strings, one string per payer
 AMB_PAYERS = [ \
-"Саша", \
-"Маша"  \
+"РЎР°С€Р°", \
+"РњР°С€Р°"  \
 ]
+
+# <AMB_SPECIAL_PURPOSES> is list of non-empty unique strings, one string per purpose
+# these purposes are ignored later for creditors
+AMB_SPECIAL_PURPOSES = [    \
+"РѕСЃРѕР±РѕРµ",   \
+"РєРІР°СЂС‚РёСЂР°"  \
+]
+
 
 # <AMB_PURPOSE> is list of non-empty unique strings, one string per purpose
 AMB_PURPOSES = [    \
-"еда",      \
-"общие",    \
-"Саша",     \
-"Маша",     \
-"особое",   \
-"квартира"  \
+"РµРґР°",      \
+"РѕР±С‰РёРµ",    \
+"РЎР°С€Р°",     \
+"РњР°С€Р°"      \
 ]
+
+AMB_PURPOSES += AMB_SPECIAL_PURPOSES
 
 # Proportions set how much each of payer pays for corresponding purpose
 # <AMB_PROPORTIONS> var must be list with next restrictions:
@@ -28,6 +36,7 @@ AMB_PROPORTIONS = [     \
 [   0.75,    0.25   ],  \
 [   0.5,     0.5    ],  \
 [   1.0,     0.0    ],  \
+[   0.0,     1.0    ],  \
 [   -1,      -1     ],  \
 [   -1,      -1     ]   \
 ]
@@ -53,20 +62,20 @@ def checkAmbience():
     except AssertionError:
         raise Exception("[GAG ASSERT] bad AMB_PURPOSES")
     
-    try:
-        assert type(AMB_PROPORTIONS) is list                # AMB_PROPORTIONS is list
-        assert len(AMB_PROPORTIONS) == len(AMB_PURPOSES)    # length == length of AMB_PURPOSES
-        for prop in AMB_PROPORTIONS:                        # each *prop* must :
-            assert (type(prop) is list) and (len(prop) == len(AMB_PAYERS))  # - be list with length == length of AMB_PAYERS
-            for p in prop:
-                assert (type(p) is int) or (type(p) is float)               # - be list of integers/floats
+    #try:
+    assert type(AMB_PROPORTIONS) is list                # AMB_PROPORTIONS is list
+    assert len(AMB_PROPORTIONS) == len(AMB_PURPOSES)    # length == length of AMB_PURPOSES
+    for prop in AMB_PROPORTIONS:                        # each *prop* must :
+        assert (type(prop) is list) and (len(prop) == len(AMB_PAYERS))  # - be list with length == length of AMB_PAYERS
+        for p in prop:
+            assert (type(p) is int) or (type(p) is float)               # - be list of integers/floats
     
-            if prop != ( [-1] * len(AMB_PAYERS) ):                          # - be rather [-1, ... -1]
-                assert sum(prop) == 1.0                                     # - or list of positives with sum == 1.0
-                for p in prop:
-                    assert p >= 0
-    except AssertionError:
-        raise Exception("[GAG ASSERT] bad AMB_PROPORTIONS")
+        if prop != ( [-1] * len(AMB_PAYERS) ):                          # - be rather [-1, ... -1]
+            assert sum(prop) == 1.0                                     # - or list of positives with sum == 1.0
+            for p in prop:
+                assert p >= 0
+    #except AssertionError:
+    #    raise Exception("[GAG ASSERT] bad AMB_PROPORTIONS")
 
 checkAmbience()
 
